@@ -8,7 +8,4 @@ This Gym Managment System allows a user to add,update and delete members in a my
 This application was developed using Java Swings
 
 ![Gym-Management-System](https://github.com/Rhoda9000/Gym-Management-System/blob/master/gym1.PNG "How the output would look like")
-![Gym-Management-System](https://github.com/Rhoda9000/Gym-Management-System/blob/master/gym2.PNG "How the output would look like")
-![Gym-Management-System](https://github.com/Rhoda9000/Gym-Management-System/blob/master/gym3.PNG "How the output would look like")
-![Gym-Management-System](https://github.com/Rhoda9000/Gym-Management-System/blob/master/gym4.PNG "How the output would look like")
-![Gym-Management-System](https://github.com/Rhoda9000/Gym-Management-System/blob/master/gym5.PNG "How the output would look like")
+
