@@ -132,7 +132,10 @@ public class Java_Gym {
                       
                       
                       Connection con = getConnection();
-                      PreparedStatement statement = con.prepareStatement("SELECT * FROM tblmembers WHERE MemberID ='" + EnterMemberID+ "'");
+                      PreparedStatement statement = con.prepareStatement("SELECT * FROM tblmembers WHERE MemberID =?");
+                      
+                      statement.setInt(1, EnterMemberID);
+                      
                       ResultSet r1=statement.executeQuery();
                       int MemberIDCounter;
                       if(r1.next())
@@ -146,9 +149,18 @@ public class Java_Gym {
                           
                           java.util.Date PayDate = new java.util.Date();
                           java.sql.Date DatePayed = new java.sql.Date(PayDate.getTime());
+                                                    
+                          PreparedStatement posted = con.prepareStatement("INSERT INTO tblpayments(PaymentID, Date, Amount) VALUES(?, ?, ?)");
                           
-                          PreparedStatement posted = con.prepareStatement("INSERT INTO tblpayments(PaymentID, Date, Amount) VALUES('"+EnterMemberID+"', '"+DatePayed+"', '"+Amount+"')");
+                          posted.setInt(1, EnterMemberID);
+                          posted.setDate(2, DatePayed);
+                          posted.setDouble(3, Amount);
+                                  
                           posted.executeUpdate();
+                                                                                                                            
+                          x.MemberIDTextField.setText("");
+                          x.AmountTextField.setText("");
+                         
                           
                       }else{
                           JOptionPane.showMessageDialog(null , "Please Register" , "status" , 0);
@@ -323,8 +335,29 @@ public class Java_Gym {
             
              try{
             Connection con = getConnection();
-            PreparedStatement posted = con.prepareStatement("INSERT INTO tblmembers(MemberID, Name, Surname, DateOfBirth, ID_Num, Contact, DateJoined, MemberType) VALUES('"+MemberID+"', '"+Name+"', '"+Surname+"', '"+DateOfBirth+"', '"+ID_Num+"', '"+Contact+"', '"+DateJoined+"', '"+MemberType+"')");
+            
+            PreparedStatement posted = con.prepareStatement("INSERT INTO tblmembers(MemberID, Name, Surname, DateOfBirth, ID_Num, Contact, DateJoined, MemberType) VALUES(?, ?, ?, ?, ?, ?, ?, ?)");
+            
+            posted.setInt(1, MemberID);
+            posted.setString(2, Name);
+            posted.setString(3, Surname);
+            posted.setDate(4, DateOfBirth);
+            posted.setDouble(5, ID_Num);
+            posted.setString(6, Contact); 
+            posted.setDate(7, DateJoined);
+            posted.setString(8, MemberType); 
+                
+            
             posted.executeUpdate();
+            
+            x.NameTextField.setText("");
+            x.SurnameTextField.setText("");
+            x.DateOfBirthTextField.setText("");
+            x.ID_NumTextField.setText("");
+            x.ContactTextField.setText("");
+            x.MemberIDTextField.setText("");
+            x.Annual.setSelected(false);
+            x.Monthly.setSelected(false);
             
         }
         catch(Exception ev){ev.printStackTrace();}
@@ -432,13 +465,17 @@ public class Java_Gym {
                       int MemberID;
                       MemberID = Integer.parseInt(x.MemberIDTextField.getText());
                       
-                      String sql = "DELETE FROM tblmembers WHERE MemberID='"+MemberID+"'";
+                      String sql = "DELETE FROM tblmembers WHERE MemberID=?";
                         
                       Connection conn = getConnection();
                       PreparedStatement statement = conn.prepareStatement(sql);
                         
+                      statement.setInt(1,MemberID);
 
                        int rowsDeleted = statement.executeUpdate();
+                      
+                        x.MemberIDTextField.setText("");
+                              
                        if (rowsDeleted > 0) {
                            JOptionPane.showMessageDialog(null , "Member Deleted" , "status" , 1);
                             
@@ -528,9 +565,7 @@ public class Java_Gym {
 
                     String Contact = x.ContactTextField.getText();
 
-                    java.util.Date utilDate = new java.util.Date();
-                    java.sql.Date DateJoined = new java.sql.Date(utilDate.getTime());
-
+                    
                     x.Annual.setMnemonic(KeyEvent.VK_B);
                     x.Annual.setActionCommand("Annual: R200/year");
 
@@ -549,10 +584,28 @@ public class Java_Gym {
                               
  
              try{
-                 String sql = "UPDATE tblmembers SET Name='"+Name+"', Surname='"+Surname+"', DateOfBirth='"+DateOfBirth+"', ID_Num='"+ID_Num+"', Contact='"+Contact+"', DateJoined='"+DateJoined+"', MemberType='"+MemberType+"' WHERE MemberID='"+MemberID+"'";
+                 String sql = "UPDATE tblmembers SET Name = ?, Surname = ?, DateOfBirth = ?, ID_Num = ?, Contact = ?, MemberType = ? WHERE MemberID = ?";
             Connection con = getConnection();
             PreparedStatement posted = con.prepareStatement(sql);
-            posted.executeUpdate(sql);
+            
+            posted.setString(1,Name);
+            posted.setString(2,Surname);
+            posted.setDate(3,DateOfBirth);
+            posted.setDouble(4,ID_Num);
+            posted.setString(5,Contact);
+            posted.setString(6,MemberType);
+            posted.setInt(7,MemberID);
+           
+            posted.executeUpdate();
+            
+            x.NameTextField.setText("");
+            x.SurnameTextField.setText("");
+            x.DateOfBirthTextField.setText("");
+            x.ID_NumTextField.setText("");
+            x.ContactTextField.setText("");
+            x.MemberIDTextField.setText("");
+            x.Annual.setSelected(false);
+            x.Monthly.setSelected(false);
             
         }
         catch(Exception ev){ ev.printStackTrace();}
@@ -663,8 +716,8 @@ public class Java_Gym {
         try{
             String driver = "com.mysql.jdbc.Driver";
             String url = "jdbc:mysql://localhost:3306/details";
-            String username = "Dylan";
-            String password = "mypass";                    
+            String username = "root";
+            String password = "";                    
             Class.forName(driver);
             
             Connection conn = DriverManager.getConnection(url, username, password);
